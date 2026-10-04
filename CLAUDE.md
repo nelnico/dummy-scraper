@@ -107,6 +107,11 @@ dummy-scraper/
 
 ## Architecture plan (all 12 levels)
 
+**Scope:** the point of this project is demonstrating how to get *past* each level's
+anti-scraping obstacle. Production hardening is explicitly out of scope - don't offer atomic
+writes, retry policies, concurrency or similar robustness polish unless Nico asks. If a
+download goes bad, delete the file and rerun.
+
 All 12 levels produce **identical output**: the same 137 papers, same fields, same PDFs.
 Only the *acquisition* differs. So each level is one swappable function behind a fixed contract:
 

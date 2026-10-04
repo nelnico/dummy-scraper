@@ -30,6 +30,7 @@ class Paper(BaseModel):
 
 def scrape_page(page: int) -> tuple[list[Paper], bool]:
     response = httpx.get(URL, params={"page": page})
+    response.raise_for_status()
     soup = BeautifulSoup(response.text, "lxml")
     rows = soup.select("#archive-results tbody tr")
 
