@@ -132,6 +132,16 @@ contract (duck typing). TS equivalent: `interface Scraper { scrape(): Paper[] }`
 Rationale: with only one level the shared seams are guesswork. Two examples reveal the real
 boundary. Do not build `core/` early.
 
+### Level 01 notes (learned the hard way)
+- Stable hooks: `#archive-results` on the table, `data-paper-id` on each `<tr>`.
+  Class names are Tailwind - useless, and obfuscated at level 11.
+- **Out-of-range pages clamp to the last page**: `?page=99` returns page 14's 7 rows with
+  status 200. "Loop until a page is empty" never terminates. Follow `a[rel=next]` instead;
+  it is absent on page 14 even when clamping.
+- All 137 rows are `N-N` pages and `N.N KB` size - verified, no edge cases.
+- `size_kb` is a float, not bytes: `7.6 KB` is already rounded, so bytes would invent precision.
+  True byte sizes come from the downloaded files.
+
 ## Commands
 - Run: `uv run main.py`. (The earlier `uv run scraper` entry point was removed with the flat layout.)
 - Lint: `uv run ruff check .` · Format: `uv run ruff format .`
@@ -150,4 +160,6 @@ boundary. Do not build `core/` early.
 - [x] Step 7: `uv add httpx beautifulsoup4 lxml pydantic` (check pyproject.toml to confirm)
 - [x] Step 8: Dev tools: `uv add --dev ruff mypy pytest` + strict config in pyproject.toml
 - [x] Step 9: Flattened structure to root-level `main.py` (no `src/` package)
-- [ ] Then: core/ + level 01 scraper
+- [x] Step 10: **Level 01 complete** - 137 papers scraped, validated, saved to
+      `output/papers.json`, 137 PDFs in `output/pdfs/`. All in `main.py`, deliberately flat.
+- [ ] Next: level 02 (form POST download), then extract the shared parts into `core/`
